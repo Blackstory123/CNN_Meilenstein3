@@ -10,6 +10,23 @@ from torch.utils.data import DataLoader, random_split, Dataset
 
 from studentv1 import StudentCNN
 
+"""
+Training des Student-Modells mit Offline Knowledge Distillation.
+
+Als Teacher wird das vortrainierte ResNet18-Modell aus Meilenstein 2
+verwendet. Der Teacher wird eingefroren und während des Trainings
+nicht weiter optimiert.
+
+Der Student lernt aus zwei Quellen:
+1. echte CIFAR-10-Labels über CrossEntropyLoss
+2. Soft Targets des Teachers über KL-Divergenz
+
+Bestes Experiment:
+- Temperature = 6.0
+- Alpha = 0.7
+- 20 Epochen
+"""
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 MILESTONE_DIR = SCRIPT_DIR.parent
 PROJECT_DIR = MILESTONE_DIR.parent
@@ -22,6 +39,10 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 STUDENT_KD_PATH = MODEL_DIR / "best_student_kdv4_doubleepochs.pth"
 
 TEACHER_PATH = PROJECT_DIR / "models" / "Station2" / "best_resnet18_hflip.pth"
+
+# Dieses Dataset erzeugt für jedes CIFAR-10-Bild zwei Versionen:
+# 1. student_image: 32x32-Bild für das StudentCNN
+# 2. teacher_image: 224x224-Bild mit ImageNet-Normalisierung für ResNet18
 
 class DistillationDataset(Dataset):
     def __init__(self, dataset, student_transform, teacher_transform):
@@ -47,6 +68,11 @@ def create_teacher_model(num_classes=10):
     model.fc = nn.Linear(in_features, num_classes)
 
     return model
+
+# Kombination aus klassischem CrossEntropyLoss und Distillation Loss.
+# CrossEntropyLoss vergleicht den Student mit den echten Labels.
+# Der Distillation Loss vergleicht die weichen Wahrscheinlichkeiten
+# des Students mit denen des Teachers.
 
 def distillation_loss(
     student_outputs,
