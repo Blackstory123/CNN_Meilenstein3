@@ -4,6 +4,13 @@ import torch.nn.functional as F
 
 
 class StudentCNN(nn.Module):
+     """
+    Kompaktes CNN-Modell für CIFAR-10.
+
+    Die Anzahl der Feature Maps steigt von 32 über 64 auf 128.
+    Durch drei MaxPooling-Schritte wird die räumliche Auflösung
+    von 32x32 auf 4x4 reduziert.
+    """
     def __init__(self, num_classes=10):
         super(StudentCNN, self).__init__()
 
