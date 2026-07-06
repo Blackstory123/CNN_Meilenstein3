@@ -10,6 +10,16 @@ from torch.utils.data import DataLoader, random_split, Dataset
 
 from studentv1 import StudentCNN
 
+"""
+Knowledge-Distillation-Experiment mit einem 32x32-Teacher.
+
+Dieses Script untersucht, ob ein Teacher mit derselben Eingabeauflösung
+wie der Student bessere Soft Targets liefert.
+
+Im Ergebnis zeigte sich, dass der 32x32-Teacher schlechter abschnitt
+als der stärkere ResNet18-Teacher mit 224x224-Eingaben.
+"""
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 MILESTONE_DIR = SCRIPT_DIR.parent
 PROJECT_DIR = MILESTONE_DIR.parent
