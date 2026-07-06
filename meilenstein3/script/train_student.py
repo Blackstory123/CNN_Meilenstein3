@@ -73,10 +73,6 @@ test_loader = DataLoader(
 )
 
 
-# --------------------------------------------------
-# Modell
-# --------------------------------------------------
-
 model = StudentCNN(num_classes=10)
 model = model.to(device)
 

@@ -21,10 +21,6 @@ TEACHER_PATH = PROJECT_DIR / "models" / "Station2" / "best_resnet18_hflip.pth"
 CNN_M1_PATH = PROJECT_DIR / "models" / "best_model_v10.pth"
 
 
-# --------------------------------------------------
-# ResNet18 Teacher aus Meilenstein 2
-# --------------------------------------------------
-
 def create_resnet18_teacher(num_classes=10):
     model = models.resnet18(weights=None)
 
@@ -33,10 +29,6 @@ def create_resnet18_teacher(num_classes=10):
 
     return model
 
-
-# --------------------------------------------------
-# Hilfsfunktionen
-# --------------------------------------------------
 
 def load_weights(model, path, device):
     if not path.exists():
@@ -57,7 +49,6 @@ def count_parameters(model):
 
 
 def parameter_size_mb(model):
-    # float32 = 4 Byte pro Parameter
     return count_parameters(model) * 4 / (1024 ** 2)
 
 
@@ -74,7 +65,6 @@ def benchmark_model(
 
     dummy_input = torch.randn(batch_size, *input_size).to(device)
 
-    # Warm-up: erste Durchläufe nicht messen
     with torch.inference_mode():
         for _ in range(warmup_runs):
             _ = model(dummy_input)
@@ -125,10 +115,6 @@ def print_result(name, model, input_size, accuracy, device):
     print(f"Bilder pro Sekunde: {fps:.2f} FPS")
 
 
-# --------------------------------------------------
-# Main
-# --------------------------------------------------
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Device: {device}")
 
@@ -145,11 +131,6 @@ teacher = load_weights(teacher, TEACHER_PATH, device)
 
 print("Modelle erfolgreich geladen.")
 print()
-
-
-# --------------------------------------------------
-# Speed-Test
-# --------------------------------------------------
 
 print_result(
     name="StudentKD20 Meilenstein 3",
