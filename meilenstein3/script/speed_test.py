@@ -8,6 +8,23 @@ from torchvision import models
 
 from studentv1 import StudentCNN
 
+"""
+Speed-Test für den Vergleich der Modelle aus Meilenstein 1, 2 und 3.
+
+Verglichen werden:
+- StudentKD20 aus Meilenstein 3
+- CNN V10 aus Meilenstein 1
+- ResNet18 Teacher aus Meilenstein 2
+
+Gemessen werden:
+- Parameteranzahl
+- geschätzter Speicherbedarf
+- Inferenzzeit pro Bild
+- Bilder pro Sekunde
+
+Die Messung dient nur dem relativen Vergleich auf demselben System.
+"""
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 MILESTONE_DIR = SCRIPT_DIR.parent
 PROJECT_DIR = MILESTONE_DIR.parent
@@ -51,6 +68,8 @@ def count_parameters(model):
 def parameter_size_mb(model):
     return count_parameters(model) * 4 / (1024 ** 2)
 
+# Führt mehrere Forward-Passes mit Dummy-Daten aus.
+# Die ersten Durchläufe dienen als Warm-up und werden nicht gemessen.
 
 def benchmark_model(
     model,
