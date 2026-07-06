@@ -9,6 +9,16 @@ from torch.utils.data import DataLoader, random_split
 
 from studentv1 import StudentCNN
 
+"""
+Training des Student-Modells ohne Knowledge Distillation.
+
+Dieses Script trainiert das kleine StudentCNN ausschließlich mit
+CrossEntropyLoss und den echten CIFAR-10-Labels.
+
+Das Ergebnis dient als Baseline für den Vergleich mit den
+Knowledge-Distillation-Varianten.
+"""
+
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 MILESTONE_DIR = SCRIPT_DIR.parent
